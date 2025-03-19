@@ -1,0 +1,22 @@
+type: "yolo"
+
+dataset_path: ".../Data/kitti"
+
+kwargs:
+  suffix: "png"
+  use_cache: false      # (test on i5-12490f) Actual time cost:  16.33s -> 0.18s
+
+train:
+  image_dir: "images_1x1"
+  label: "yolo_labels_split_abs/train"
+
+val:
+  image_dir: "images_1x1"
+  label: "yolo_labels_split_abs/val"
+
+test:
+  test_dir: "test2017"
+
+segmentaion_enabled: false
+
+names: ['Car', 'Pedestrian', 'Cyclist']

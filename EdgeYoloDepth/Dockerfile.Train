@@ -1,0 +1,22 @@
+FROM pytorch/pytorch:2.2.2-cuda12.1-cudnn8-devel
+
+RUN apt-get update
+RUN apt-get install 'git' ffmpeg libsm6 libxext6 -y
+
+COPY . /install
+WORKDIR /install
+
+RUN python -m pip install -U pip
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Create a virtual environment for onnx2tflite
+# RUN python -m venv /install/venv/onnx2tflite
+
+# Activate the virtual environment and install the package
+# RUN /bin/bash -c "source /install/venv/onnx2tflite/bin/activate && pip install ./onnx2tflite"
+
+RUN chmod 777 /install
+RUN chmod 777 -R /home
+
+
+CMD python train.py --cfg /training/train_params.yaml
