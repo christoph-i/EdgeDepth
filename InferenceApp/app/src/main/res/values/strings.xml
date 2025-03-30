@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">edgeyoloapp</string>
+    <string name="stop_inference">Stop</string>
+    <string name="start_inference">Start</string>
+</resources>
