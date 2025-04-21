@@ -9,11 +9,14 @@ WORKDIR /install
 RUN python -m pip install -U pip
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Create a virtual environment for onnx2tflite
-# RUN python -m venv /install/venv/onnx2tflite
+# Add env for model conversion to tflite 
+RUN python -m venv venv
 
-# Activate the virtual environment and install the package
-# RUN /bin/bash -c "source /install/venv/onnx2tflite/bin/activate && pip install ./onnx2tflite"
+RUN git clone --depth 1 https://github.com/MPolaris/onnx2tflite.git && \
+    cd onnx2tflite && \
+    git checkout c79af32236756e37366f1620bf01c46ba3d352f5
+
+RUN /install/venv/bin/pip install ./onnx2tflite
 
 
 # if you want to develop in a container using vscode run the following line as well

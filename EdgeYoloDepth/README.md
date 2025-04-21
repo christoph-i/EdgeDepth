@@ -14,10 +14,18 @@
 2. Run the train script with './train_model.sh' (you might need to make it execuable first with 'chmod +x train_model.sh'). Resulting models and output will be saved to the kitti_train_example dir. 
 
 
+## Convert models 
+To convert models to ONNX and TensorFlow Saved Model or TFLite format the train docker container can be reused. 
+
+Attach your shell to the container (e.g. 'docker exec -it YOU_CONTAINER bash'). 
+Activate the venv (e.g. 'source /install/venv/bin/activate')
+Run the conversion script with respective args, e.g. 'python export_onnx_tf.py --weights /training/best.pth'
+
+ONNX, Saved Model and TFLite model files will automatically be saved to the same dir as the provided .pth file. 
+
+
 ## Full train documentation
 
-
-## Convert models 
 
 
 ## Evaluate 
