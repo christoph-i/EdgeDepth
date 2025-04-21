@@ -7,12 +7,12 @@ kwargs:
   use_cache: false      # (test on i5-12490f) Actual time cost:  16.33s -> 0.18s
 
 train:
-  image_dir: "images_1x1"
-  label: "yolo_labels_split_abs/train"
+  image_dir: "None - Test onyl!"
+  label: "None - Test onyl!"
 
 val:
   image_dir: "images_1x1"
-  label: "yolo_labels_split_abs/val"
+  label: "yolo_labels_split_norm/test"
 
 test:
   test_dir: "test2017"

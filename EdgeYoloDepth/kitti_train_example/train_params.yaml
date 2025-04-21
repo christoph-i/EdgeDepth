@@ -1,0 +1,68 @@
+# models & weights------------------------------------------------------------------------------------------------------
+model_cfg: "/mnt/EdgeDepth/EdgeYoloDepth/params/model/edgeyolo_tiny_lrelu_depth.yaml"         # model structure config file
+weights: null                                         # contains model_cfg, set null or a no-exist filename if not use it
+use_cfg: false                                       # force using model_cfg instead of cfg in weights to build model
+
+depth_mode: True                                   # Train per box depth prediction, this will also impact the model architecture (depth components in head and output), make sure the YoloXDepthHead is used in the model config - otherwise assertion will fail 
+# output----------------------------------------------------------------------------------------------------------------
+output_dir: ""        # all train output file will save in this dir
+save_checkpoint_for_each_epoch: false                 # save models for each epoch (epoch_xxx.pth, not only best/last.pth)
+log_file: "log.txt"                                  # log file (in output_dir)
+
+# dataset & dataloader--------------------------------------------------------------------------------------------------
+dataset_cfg: "/mnt/EdgeDepth/EdgeYoloDepth/params/dataset/kitti_train_val_norm.yaml"              # dataset config
+batch_size_per_gpu: 8                                # batch size for each GPU
+loader_num_workers: 4                                # number data loader workers for each GPU
+num_threads: 1                                       # pytorch threads number for each GPU
+
+# device & data type----------------------------------------------------------------------------------------------------
+device: [0]                                 # training device list
+fp16: false                                          # train with fp16 precision
+cudnn_benchmark: false                               # it's useful when multiscale_range is set zero
+
+# train hyper-params----------------------------------------------------------------------------------------------------
+optimizer: "SGD"                                     # or Adam
+max_epoch: 100                                       # or 400
+close_mosaic_epochs: 25                             # close data augmentation at last several epochs
+
+# learning rate---------------------------------------------------------------------------------------------------------
+lr_per_img: 0.00015625                               # total_lr = lr_per_img * batch_size_per_gpu * len(devices)
+warmup_epochs: 5                                     # warm-up epochs at the beginning of training
+warmup_lr_ratio: 0.0                                 # warm-up learning rate start from value warmup_lr_ratio * total_lr
+final_lr_ratio: 0.05                                 # final_lr_per_img = final_lr_ratio * lr_per_img
+
+# training & dataset augmentation---------------------------------------------------------------------------------------
+#      [cls_loss, conf_loss, iou_loss, depth_loss]
+loss_use: ["bce", "bce", "giou", "l1"]  # bce: BCE loss | bcf: Balanced Focal loss | hyb: hybrid of bce and bcf | iou, c/g/s iou is available 
+depth_loss_weight: 1.0
+input_size: [384, 384]            # image input size for model
+multiscale_range: 0               # real_input_size = input_size + randint(-multiscale_range, multiscale_range) * 32
+weight_decay: 0.0005              # optimizer weight decay
+momentum: 0.9                     # optimizer momentum
+enhance_mosaic: false             # use enhanced mosaic method
+use_ema: true                     # use EMA (Exponential Moving Average) method
+enable_mixup: false                # use mixup
+mixup_scale: [0.5, 1.5]           # mixup image scale
+mosaic_scale: [0.1, 2.0]          # mosaic image scale
+flip_prob: 0.5                    # flip image probability
+mosaic_prob: 0.0                    # mosaic probability
+mixup_prob: 0.0                     # mixup probability
+degrees: 0                       # maximum rotate degrees
+hsv_gain: [0.0138, 0.664, 0.464]  # hsv gain ratio
+
+# evaluate--------------------------------------------------------------------------------------------------------------
+eval_at_start: false              # evaluate loaded model before training
+val_conf_thres: 0.001             # confidence threshold when doing evaluation
+val_nms_thres: 0.65               # NMS IOU threshold when doing evaluation
+eval_only: false                  # do not train, run evaluation program only for all weights in output_dir
+obj_conf_enabled: true            # use object confidence when doing inference
+eval_interval: 1                  # evaluate interval epochs
+
+# show------------------------------------------------------------------------------------------------------------------
+print_interval: 100               # print result after every $print_interval iterations
+
+# others----------------------------------------------------------------------------------------------------------------
+load_optimizer_params: true       # load optimizer params when resume train, set false if there is an error.
+train_backbone: true              # set false if you only want to train yolo head
+train_start_layers: 51            # if not train_backbone, train from this layer, see params/models/edgeyolo.yaml
+force_start_epoch: -1             # set -1 to disable this option

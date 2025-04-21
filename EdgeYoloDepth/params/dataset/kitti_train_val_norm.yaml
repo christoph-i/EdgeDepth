@@ -1,6 +1,6 @@
 type: "yolo"
 
-dataset_path: ".../Data/kitti"
+dataset_path: "/mnt/EdgeDepth/Dataset/kitti"
 
 kwargs:
   suffix: "png"
